@@ -21,8 +21,8 @@ export const getQuestionById = async (req: Request, res: Response) => {
 };
 export const createQuestion = async (req: Request, res: Response) => {
   try {
-    const { text, dedicatedTime } = req.body;
-    const question = await Question.create({ text, dedicatedTime });
+    const { text, questionTime } = req.body;
+    const question = await Question.create({ text, questionTime });
     res.status(201).json(question);
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
