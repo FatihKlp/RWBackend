@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IQuestionTime {
+export interface IQuestionTime {
   minutes: number;
   seconds: number;
 }
 
-interface IQuestion extends Document {
+export interface IQuestion extends Document {
   _id: mongoose.Types.ObjectId;
   text: string;
   questionTime: IQuestionTime;

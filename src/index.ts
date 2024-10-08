@@ -3,7 +3,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import 'dotenv/config';
+
 import AuthRoutes from './routes/login.routes';
+import QuestionsRoutes from './routes/questions.routes';
+import QuestionPackageRoutes from './routes/questionPackages.routes';
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -23,7 +26,7 @@ app.use(express.json());
 app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 app.use(cookieParser());
 
-// Loglama
+// Loglama (İşlem yapıldığında)
 app.use((req: Request, res: Response, next: NextFunction) => {
     console.log(`[${new Date().toISOString()}] ${req.ip} - ${req.method} ${req.path}`);
     next();
@@ -31,10 +34,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   
 // Login Route (Public, no authentication required)
 app.use('/api/login', AuthRoutes);
+app.use('/api/questions', QuestionsRoutes);
+app.use('/api/questionPackages', QuestionPackageRoutes);
 
-// Error Handling
+// Error Handling (Hata olduğu zamanlarda)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack);
+    console.error(`[${new Date().toISOString()}] ${req.method} ${req.path} - Error: ${err.message}`);
     res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
