@@ -5,7 +5,7 @@ import {
     updateQuestionPackage,
     getQuestionPackageById,
     getQuestionPackages
-} from '../controller/questionPackage.controller';
+} from '../controllers/questionPackage.controller';
 
 const router = express.Router();
 

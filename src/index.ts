@@ -7,6 +7,8 @@ import 'dotenv/config';
 import AuthRoutes from './routes/login.routes';
 import QuestionsRoutes from './routes/questions.routes';
 import QuestionPackageRoutes from './routes/questionPackages.routes';
+import InterviewRoutes from './routes/interviews.routes';
+import LinkRoutes from './routes/link.routes';
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -36,6 +38,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/api/login', AuthRoutes);
 app.use('/api/questions', QuestionsRoutes);
 app.use('/api/questionPackages', QuestionPackageRoutes);
+app.use('/api/interviews', InterviewRoutes);
+app.use('/api/links', LinkRoutes);
 
 // Error Handling (Hata olduğu zamanlarda)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
