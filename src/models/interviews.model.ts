@@ -11,7 +11,7 @@ export interface IInterview extends Document {
 }
 
 const interviewSchema: Schema = new Schema({
-    title: { type: String, required: true },  // Mülakat başlığı
+    title: { type: String, required: true, trim: true },  // Mülakat başlığı
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     questionPackage: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionPackage', required: true }],
     videoUrl: { type: String },  // Kullanıcı video kaydı yapacak
