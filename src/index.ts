@@ -33,7 +33,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     console.log(`[${new Date().toISOString()}] ${req.ip} - ${req.method} ${req.path}`);
     next();
 });
-  
+
 // Login Route (Public, no authentication required)
 app.use('/api/login', AuthRoutes);
 app.use('/api/questions', QuestionsRoutes);

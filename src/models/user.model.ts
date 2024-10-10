@@ -7,6 +7,7 @@ export interface IUser extends Document {
     email: string;
     phone: string;
     status: 'pending' | 'passed' | 'failed'; // Mülakat durumu
+    kvkk: boolean;
 }
 
 // User şeması
@@ -39,6 +40,10 @@ const UserSchema: Schema = new Schema(
             enum: ['pending', 'passed', 'failed'], // Sadece bu üç değeri kabul eder
             default: 'pending', // Varsayılan olarak mülakat "pending" olur
             required: true
+        },
+        kvkk: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }

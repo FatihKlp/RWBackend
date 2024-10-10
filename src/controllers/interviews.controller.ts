@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import Interview from '../models/interviews.model';
 
+const URL = process.env.COMPANY_URL;
+
 // Admin yeni bir mülakat oluşturur
 export const createInterview = async (req: Request, res: Response) => {
     const { title, questionPackage, expireDate } = req.body;
@@ -8,7 +10,11 @@ export const createInterview = async (req: Request, res: Response) => {
     try {
         const newInterview = new Interview({ title, questionPackage, expireDate });
         await newInterview.save();
-        return res.status(201).json(newInterview);  // Interview oluşturuldu
+        
+        // Mülakat oluşturulduktan sonra link oluşturuluyor
+        const interviewLink = `${URL}/interview/${newInterview.interviewLink}`;
+        
+        return res.status(201).json({ interview: newInterview, interviewLink });  // Interview ve link döndürülüyor
     } catch (error) {
         return res.status(400).json({ message: 'Interview oluşturulamadı', error });
     }

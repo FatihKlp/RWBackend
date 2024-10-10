@@ -22,6 +22,7 @@ export const getQuestionById = async (req: Request, res: Response) => {
 export const createQuestion = async (req: Request, res: Response) => {
   try {
     const { text, questionTime } = req.body;
+    console.log(req.body);
     const question = await Question.create({ text, questionTime });
     res.status(201).json(question);
   } catch (error) {
@@ -32,10 +33,11 @@ export const createQuestion = async (req: Request, res: Response) => {
 export const updateQuestion = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { text, dedicatedTime } = req.body;
+    const { text, questionTime } = req.body;  // questionTime burada doğru şekilde alınıyor
+
     const question = await Question.findByIdAndUpdate(
       id,
-      { text, dedicatedTime },
+      { text, questionTime },  // questionTime'ı güncelle
       { new: true }
     );
     res.status(200).json(question);
