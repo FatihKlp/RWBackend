@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import QuestionPackage from '../models/questionpackage.model';
+import QuestionPackage from '../models/questionPackage.model';
 import mongoose from 'mongoose';
 
 // Yeni bir soru paketi ekle
