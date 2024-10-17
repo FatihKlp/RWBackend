@@ -1,17 +1,18 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// User interface'i
-export interface IUser extends Document {
+// Candidate interface'i
+export interface ICandidate extends Document {
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
     status: 'pending' | 'passed' | 'failed'; // Mülakat durumu
     kvkk: boolean;
+    videoUrl: string;
 }
 
-// User şeması
-const UserSchema: Schema = new Schema(
+// Candidate şeması
+const CandidateSchema: Schema = new Schema(
     {
         firstName: {
             type: String,
@@ -44,12 +45,16 @@ const UserSchema: Schema = new Schema(
         kvkk: {
             type: Boolean,
             default: false
-        }
+        },
+        videoUrl: {
+            type: String,
+            required: false
+        },
     },
     { timestamps: true }
 );
 
-// User modelini oluşturma
-const User = mongoose.model<IUser>('User', UserSchema);
+// Candidate modelini oluşturma
+const Candidate = mongoose.model<ICandidate>('Candidate', CandidateSchema);
 
-export default User;
+export default Candidate;

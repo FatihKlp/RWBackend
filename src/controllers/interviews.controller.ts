@@ -18,7 +18,7 @@ export const createInterview = async (req: Request, res: Response) => {
 // Tüm mülakatları listeleme
 export const getInterviews = async (req: Request, res: Response) => {
   try {
-    const interviews = await Interview.find().populate("user questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
+    const interviews = await Interview.find().populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
     return res.status(200).json(interviews); // Mülakatlar listelendi
   } catch (error) {
     return res.status(400).json({ message: "Mülakatlar alınamadı", error });
@@ -31,7 +31,7 @@ export const getInterviewById = async (req: Request, res: Response) => {
 
   try {
     const interview = await Interview.findById(id).populate(
-      "user questionPackage"
+      "candidate questionPackage"
     ); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!interview) {
       return res.status(404).json({ message: "Mülakat bulunamadı" });
@@ -50,7 +50,7 @@ export const updateInterview = async (req: Request, res: Response) => {
   try {
     const updatedInterview = await Interview.findByIdAndUpdate(id, updateData, {
       new: true,
-    }).populate("user questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
+    }).populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!updatedInterview) {
       return res.status(404).json({ message: "Mülakat bulunamadı" });
     }

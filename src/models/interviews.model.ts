@@ -3,23 +3,24 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface IInterview extends Document {
     title: string;
-    user: mongoose.Types.ObjectId;
+    candidate: mongoose.Types.ObjectId;
     questionPackage: mongoose.Types.ObjectId[]; // Soru Paketi referansı
     videoUrl: string;
     interviewLink: string;
+    publish: boolean;
     expireDate: Date; // Mülakatın bitiş tarihi
 }
 
 const interviewSchema: Schema = new Schema({
     title: { type: String, required: true, trim: true },  // Mülakat başlığı
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
+    candidate: { type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false },
     questionPackage: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionPackage', required: true }],
-    videoUrl: { type: String },  // Kullanıcı video kaydı yapacak
-    interviewLink: { 
-        type: String, 
+    interviewLink: {
+        type: String,
         default: uuidv4,  // Her mülakata rastgele bir link atıyoruz
-        unique: true 
+        unique: true
     },
+    publish: { type: Boolean, default: false },  // Mülakat yayınlandımi
     expireDate: { type: Date, required: true }  // Mülakat bitiş tarihi
 }, { timestamps: true });
 
