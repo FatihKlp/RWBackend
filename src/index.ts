@@ -9,6 +9,7 @@ import QuestionsRoutes from './routes/questions.routes';
 import QuestionPackageRoutes from './routes/questionPackages.routes';
 import InterviewRoutes from './routes/interviews.routes';
 import LinkRoutes from './routes/link.routes';
+import VideoRoutes from './routes/video.routes';
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -40,6 +41,7 @@ app.use('/api/questions', QuestionsRoutes);
 app.use('/api/questionPackages', QuestionPackageRoutes);
 app.use('/api/interviews', InterviewRoutes);
 app.use('/api/links', LinkRoutes);
+app.use('/api/videos', VideoRoutes);
 
 // Error Handling (Hata olduğu zamanlarda)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

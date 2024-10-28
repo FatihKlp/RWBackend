@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { json, Request, Response } from "express";
 import Interview from "../models/interviews.model";
 
 // Admin yeni bir mülakat oluşturur
@@ -21,7 +21,8 @@ export const getInterviews = async (req: Request, res: Response) => {
     const interviews = await Interview.find().populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
     return res.status(200).json(interviews); // Mülakatlar listelendi
   } catch (error) {
-    return res.status(400).json({ message: "Mülakatlar alınamadı", error });
+    const message = error instanceof Error ? error.message : "Mülakatlar listelenemedi";
+    res.status(400).json({ message, error });
   }
 };
 
@@ -38,8 +39,9 @@ export const getInterviewById = async (req: Request, res: Response) => {
     }
     return res.status(200).json(interview); // Mülakat bulundu
   } catch (error) {
-    return res.status(400).json({ message: "Mülakat alınamadı", error });
-  }
+    const message = error instanceof Error ? error.message : "Mülakat bulunamadı";
+    res.status(400).json({ message, error });
+}
 };
 
 // Mülakat güncelleme
@@ -56,7 +58,8 @@ export const updateInterview = async (req: Request, res: Response) => {
     }
     return res.status(200).json(updatedInterview); // Mülakat güncellendi
   } catch (error) {
-    return res.status(400).json({ message: "Mülakat güncellenemedi", error });
+    const message = error instanceof Error ? error.message : "Mülakat güncellenemedi";
+    res.status(400).json({ message, error });
   }
 };
 
@@ -71,6 +74,28 @@ export const deleteInterview = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ message: "Mülakat başarıyla silindi" }); // Mülakat silindi
   } catch (error) {
-    return res.status(400).json({ message: "Mülakat silinemedi", error });
+    const message = error instanceof Error ? error.message : "Mülakat silinemedi";
+    res.status(400).json({ message, error });
+  }
+};
+
+// Mülakatı yayınlama durumunu güncelleme (publish/unpublish)
+export const updatePublishStatus = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { publish } = req.body;
+
+  try {
+    const updatedInterview = await Interview.findByIdAndUpdate(
+      id,
+      { publish: publish }, // Doğru alan adı
+      { new: true }
+    ).populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
+    if (!updatedInterview) {
+      return res.status(404).json({ message: "Mülakat bulunamadı" });
+    }
+    return res.status(200).json(updatedInterview);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Mülakat güncellenemedi";
+    res.status(400).json({ message, error });
   }
 };

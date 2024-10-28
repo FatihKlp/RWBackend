@@ -9,9 +9,14 @@ export const accessInterviewByLink = async (req: Request, res: Response) => {
   const { link } = req.params;
 
   try {
-    const interview = await Interview.findOne({ interviewLink: link }).populate(
-      "questionPackage"
-    );
+    const interview = await Interview.findOne({ interviewLink: link })
+      .populate({
+        path: "questionPackage",
+        populate: {
+          path: "questions", // questionPackage içindeki questions alanını doldur
+        },
+      })
+      .populate("candidate");
 
     if (!interview) {
       return res.status(404).json({ message: "Mülakat bulunamadı" });
@@ -23,68 +28,43 @@ export const accessInterviewByLink = async (req: Request, res: Response) => {
     }
 
     // Mülakatın süresi dolmuş mu kontrol ediliyor
-    const currentDate = new Date();
-    if (interview.expireDate < currentDate) {
+    const currentDate = new Date(); // Sunucudaki geçerli tarih
+    if (new Date(interview.expireDate) < currentDate) {
       return res.status(403).json({ message: "Bu mülakatın süresi dolmuştur." });
     }
 
     return res.status(200).json(interview); // Mülakat soruları ile dönüyor
   } catch (error) {
-    return res.status(500).json({ message: "Mülakat getirilemedi", error });
+    const message = error instanceof Error ? error.message : "Mülakat getirilemedi";
+    res.status(500).json({ message, error });
   }
 };
 
 // Kullanıcı video kaydını tamamlama
 export const submitInterview = async (req: Request, res: Response) => {
-  const { candidateId, videoUrl } = req.body; // Sadece candidateId ve videoUrl'yi al
+  const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl } = req.body;
 
   try {
-    // Candidate kaydını güncelle
-    const candidate = await Candidate.findById(candidateId);
-    if (candidate) {
-      candidate.videoUrl = videoUrl; // Video URL'sini candidate kaydına ekle
-      await candidate.save();
-    }
-
-    return res.status(200).json({ message: "Mülakat başarıyla tamamlandı" });
-  } catch (error) {
-    return res.status(500).json({ message: "Mülakat tamamlanamadı", error });
-  }
-};
-
-// Kullanıcı form doldurma ve mülakata giriş
-export const submitInterviewForm = async (req: Request, res: Response) => {
-  const { interviewId, fullName, email, phoneNumber, kvkk } = req.body;
-
-  try {
-    const interview = await Interview.findById(interviewId);
-    if (!interview) {
-      return res.status(404).json({ message: "Mülakat bulunamadı" });
-    }
-
-    if (!kvkk) {
-      return res.status(400).json({ message: "KVKK kabul edilmelidir" });
-    }
-
     // Yeni bir Candidate kaydı oluştur
     const candidate = new Candidate({
-      firstName: fullName.split(' ')[0], // İlk adı ayırma
-      lastName: fullName.split(' ')[1], // Soyadı ayırma
-      email: email,
-      phone: phoneNumber,
-      kvkk: kvkk,
-      status: 'pending' // Varsayılan durumu "pending"
+      firstName,
+      lastName,
+      email,
+      phone,
+      kvkk,
+      videoUrl,
+      status: "pending",
     });
 
-    await candidate.save(); // Candidate kaydını veritabanına kaydet
+    await candidate.save();
 
-    // Kullanıcı bilgileri doğrulandıktan sonra video kayıt ekranına yönlendirilir
-    return res.status(200).json({
-      message: "Form başarıyla dolduruldu, video kaydına geçebilirsiniz",
-      candidateId: candidate._id // Yeni oluşturulan candidate ID'si
-    });
+    // Interview kaydına Candidate ID'sini ekle
+    await Interview.findByIdAndUpdate(interviewId, { candidate: candidate._id });
+
+    res.status(200).json({ message: "Mülakat başarıyla tamamlandı" });
   } catch (error) {
-    return res.status(500).json({ message: "Form işlenemedi", error });
+    const message = error instanceof Error ? error.message : "Mülakat tamamlanamadı";
+    res.status(500).json({ message, error });
   }
 };
 
@@ -102,8 +82,7 @@ export const generateInterviewLink = async (req: Request, res: Response) => {
 
     return res.status(200).json({ interviewLink });
   } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Mülakat linki oluşturulamadı", error });
+    const message = error instanceof Error ? error.message : "Mülakat linki oluşturulamadı";
+    res.status(400).json({ message, error });
   }
 };

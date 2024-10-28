@@ -4,7 +4,8 @@ import {
     getInterviews,
     getInterviewById,
     updateInterview,
-    deleteInterview
+    deleteInterview,
+    updatePublishStatus
 } from '../controllers/interviews.controller';
 
 const router = express.Router();
@@ -23,6 +24,9 @@ router.put('/:id', updateInterview);
 
 // DELETE: Mülakat silme
 router.delete('/:id', deleteInterview);
+
+// PUT: Mülakatı yayınlama durumunu güncelleme (publish/unpublish)
+router.put('/:id/publish', updatePublishStatus);
 
 // Modülü dışa aktarın
 export default router;
