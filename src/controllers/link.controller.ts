@@ -1,4 +1,4 @@
-import { json, Request, Response } from "express";
+import { Request, Response } from "express";
 import Interview from "../models/interviews.model";
 import Candidate from "../models/candidate.model";
 
@@ -45,7 +45,7 @@ export const submitInterview = async (req: Request, res: Response) => {
   const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl } = req.body;
 
   try {
-    // Yeni bir Candidate kaydı oluştur
+    // Yeni bir candidate oluştur ve kaydet
     const candidate = new Candidate({
       firstName,
       lastName,
@@ -53,17 +53,19 @@ export const submitInterview = async (req: Request, res: Response) => {
       phone,
       kvkk,
       videoUrl,
-      status: "pending",
     });
-
     await candidate.save();
 
-    // Interview kaydına Candidate ID'sini ekle
-    await Interview.findByIdAndUpdate(interviewId, { candidate: candidate._id });
+    // Interview'e candidate'i ekle ve güncelle
+    await Interview.findByIdAndUpdate(
+      interviewId,
+      { $push: { candidate: candidate._id } }, // Yeni candidate'i candidates dizisine ekle
+      { new: true }
+    );
 
-    res.status(200).json({ message: "Mülakat başarıyla tamamlandı" });
+    res.status(201).json({ message: "Candidate başarıyla kaydedildi." });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Mülakat tamamlanamadı";
+    const message = error instanceof Error ? error.message : "Candidate kaydedilemedi.";
     res.status(500).json({ message, error });
   }
 };

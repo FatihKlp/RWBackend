@@ -23,7 +23,7 @@ export const fetchVideos = async (): Promise<Video[]> => {
             `${VIDEO_API_LINK}/${VIDEO_API_PROJECT}/${VIDEO_API_BUCKET}/${VIDEO_API_KEY}`
         );
         return response.data;
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(`Failed to fetch videos: ${error.message}`);
     }
 };
@@ -34,7 +34,7 @@ export const fetchVideoById = async (videoId: string): Promise<Video> => {
             `${VIDEO_API_LINK}/${VIDEO_API_PROJECT}/${VIDEO_API_BUCKET}/${VIDEO_API_KEY}/${videoId}`
         );
         return response.data;
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(`Failed to fetch video by ID: ${error.message}`);
     }
 };
@@ -54,11 +54,16 @@ export const uploadVideoToAPI = async (file: Express.Multer.File) => {
             },
         });
 
-        console.log(response.data);
+        console.log("API Response:", response.data); // Log complete response
+
+        if (!response.data) {
+            throw new Error("Invalid response from video API.");
+        }
+
         return response.data;
-    } catch (error:any) {
-        const errorMessage = error.response?.data?.message || error.message;
-        throw new Error(`Failed to upload video: ${errorMessage}`);
+    } catch (error: any) {
+        console.error("Error during video upload:", error.response ? error.response.data : error.message);
+        throw new Error(`Failed to upload video: ${error.message}`);
     }
 };
 
@@ -67,7 +72,7 @@ export const deleteVideo = async (videoId: string): Promise<void> => {
         await axios.delete(
             `${VIDEO_API_LINK}/${VIDEO_API_PROJECT}/${VIDEO_API_BUCKET}/${VIDEO_API_KEY}/${videoId}`
         );
-    } catch (error:any) {
+    } catch (error: any) {
         throw new Error(`Failed to delete video: ${error.message}`);
     }
 };

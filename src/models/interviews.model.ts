@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface IInterview extends Document {
     title: string;
-    candidate: mongoose.Types.ObjectId;
+    candidate: mongoose.Types.ObjectId[];
     questionPackage: mongoose.Types.ObjectId[]; // Soru Paketi referansı
     videoUrl: string;
     interviewLink: string;
@@ -13,7 +13,7 @@ export interface IInterview extends Document {
 
 const interviewSchema: Schema = new Schema({
     title: { type: String, required: true, trim: true },  // Mülakat başlığı
-    candidate: { type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false },
+    candidate: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false }],
     questionPackage: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionPackage', required: true }],
     interviewLink: {
         type: String,

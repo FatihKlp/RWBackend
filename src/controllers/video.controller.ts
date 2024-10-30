@@ -22,16 +22,23 @@ export const getVideoById = async (req: Request, res: Response): Promise<void> =
     }
 };
 
+// Backend: video.controller.js veya benzer bir dosya
 export const uploadVideo = async (req: Request, res: Response) => {
     try {
         if (!req.file) {
-            return res.status(400).send("No video file uploaded.");
+            console.log("Received file:", req.file);
+            console.error("No video file uploaded.");
+            return res.status(400).json({ message: "No video file uploaded." });
         }
+
+        console.log("Received file:", req.file); // Log the received file
 
         const responseData = await VideoService.uploadVideoToAPI(req.file);
 
-        res.status(200).send(responseData);
+        return res.status(200).json(responseData);
+
     } catch (error) {
+        console.error("Error during video upload:", error); // Improved logging
         const message = error instanceof Error ? error.message : "Video yüklenemedi";
         res.status(500).json({ message, error });
     }
