@@ -10,6 +10,7 @@ import QuestionPackageRoutes from './routes/questionPackages.routes';
 import InterviewRoutes from './routes/interviews.routes';
 import LinkRoutes from './routes/link.routes';
 import VideoRoutes from './routes/video.routes';
+import CandidateRoutes from './routes/candidate.routes';
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -37,11 +38,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Login Route (Public, no authentication required)
 app.use('/api/login', AuthRoutes);
+app.use('/api/videos', VideoRoutes);
+
+app.use('/api/candidates', CandidateRoutes);
+// Protected Routes
 app.use('/api/questions', QuestionsRoutes);
 app.use('/api/questionPackages', QuestionPackageRoutes);
 app.use('/api/interviews', InterviewRoutes);
+
 app.use('/api/links', LinkRoutes);
-app.use('/api/videos', VideoRoutes);
 
 // Error Handling (Hata olduğu zamanlarda)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

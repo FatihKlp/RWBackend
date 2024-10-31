@@ -69,10 +69,12 @@ export const uploadVideoToAPI = async (file: Express.Multer.File) => {
 
 export const deleteVideo = async (videoId: string): Promise<void> => {
     try {
-        await axios.delete(
+        const response = await axios.delete(
             `${VIDEO_API_LINK}/${VIDEO_API_PROJECT}/${VIDEO_API_BUCKET}/${VIDEO_API_KEY}/${videoId}`
         );
+        console.log("Video deleted from API:", response.data);
     } catch (error: any) {
+        console.error("Failed to delete video:", error.response ? error.response.data : error.message);
         throw new Error(`Failed to delete video: ${error.message}`);
     }
 };

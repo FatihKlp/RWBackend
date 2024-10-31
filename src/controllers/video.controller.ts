@@ -14,7 +14,9 @@ export const getVideos = async (req: Request, res: Response): Promise<void> => {
 export const getVideoById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
+        console.log(id);
         const video = await VideoService.fetchVideoById(id);
+        console.log(video);
         res.status(200).json(video);
     } catch (error) {
         const message = error instanceof Error ? error.message : "Video bulunamadı";
@@ -26,12 +28,12 @@ export const getVideoById = async (req: Request, res: Response): Promise<void> =
 export const uploadVideo = async (req: Request, res: Response) => {
     try {
         if (!req.file) {
-            console.log("Received file:", req.file);
+            console.log("Received file yoksa(Backend):", req.file);
             console.error("No video file uploaded.");
             return res.status(400).json({ message: "No video file uploaded." });
         }
 
-        console.log("Received file:", req.file); // Log the received file
+        console.log("Received file varsa(Backend):", req.file); // Log the received file
 
         const responseData = await VideoService.uploadVideoToAPI(req.file);
 
