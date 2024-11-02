@@ -5,7 +5,8 @@ import {
     submitInterview,
     updateCandidate,
     deleteCandidate,
-    getCandidatesForInterview
+    getCandidatesForInterview,
+    updateCandidateStatus
 } from '../controllers/candidate.controller';
 
 const router = express.Router();
@@ -27,5 +28,8 @@ router.delete('/:id', deleteCandidate);
 
 // Belirli bir mülakat ID'ye göre adayları getirir
 router.get('/:interviewId/candidates', getCandidatesForInterview);
+
+// Candidate status update
+router.put('/:id/status', updateCandidateStatus);
 
 export default router;

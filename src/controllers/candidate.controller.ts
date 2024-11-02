@@ -107,3 +107,26 @@ export const getCandidatesForInterview = async (req: Request, res: Response) => 
         });
     }
 };
+
+export const updateCandidateStatus = async (req: Request, res: Response) => {
+    const { status } = req.body;
+
+    // Check if the status is one of the allowed values
+    if (!['pending', 'passed', 'failed'].includes(status)) {
+        return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    try {
+        const candidate = await Candidate.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+        if (!candidate) {
+            return res.status(404).json({ message: 'Candidate not found' });
+        }
+        res.status(200).json(candidate);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating candidate status', error });
+    }
+};
