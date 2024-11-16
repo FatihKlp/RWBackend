@@ -6,49 +6,51 @@ export interface ICandidate extends Document {
     lastName: string;
     email: string;
     phone: string;
-    status: 'pending' | 'passed' | 'failed'; // Mülakat durumu
+    status: 'pending' | 'passed' | 'failed';
     kvkk: boolean;
     videoUrl: string;
+    filePath: string;
+    result?: {
+        transcription: string;
+        face_analysis: {
+            age: number;
+            gender: string;
+            race: string;
+            emotion: string;
+        };
+    };
 }
 
 // Candidate şeması
 const CandidateSchema: Schema = new Schema(
     {
-        firstName: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        lastName: {
-            type: String,
-            required: true,
-            trim: true
-        },
+        firstName: { type: String, required: true, trim: true },
+        lastName: { type: String, required: true, trim: true },
         email: {
             type: String,
             required: true,
             unique: true,
             trim: true,
-            match: [/.+\@.+\..+/, 'Geçerli bir email adresi giriniz'] // Email formatını doğrular
+            match: [/.+\@.+\..+/, 'Geçerli bir email adresi giriniz'],
         },
-        phone: {
-            type: String,
-            required: true,
-            trim: true
-        },
+        phone: { type: String, required: true, trim: true },
         status: {
             type: String,
-            enum: ['pending', 'passed', 'failed'], // Sadece bu üç değeri kabul eder
-            default: 'pending', // Varsayılan olarak mülakat "pending" olur
-            required: true
+            enum: ['pending', 'passed', 'failed'],
+            default: 'pending',
+            required: true,
         },
-        kvkk: {
-            type: Boolean,
-            default: false
-        },
-        videoUrl: {
-            type: String,
-            required: false
+        kvkk: { type: Boolean, default: false },
+        videoUrl: { type: String },
+        filePath: { type: String },
+        result: {
+            transcription: { type: String },
+            face_analysis: {
+                age: { type: Number },
+                gender: { type: String },
+                race: { type: String },
+                emotion: { type: String },
+            },
         },
     },
     { timestamps: true }

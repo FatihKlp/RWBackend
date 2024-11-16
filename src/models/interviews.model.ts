@@ -4,8 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 export interface IInterview extends Document {
     title: string;
     candidate: mongoose.Types.ObjectId[];
-    questionPackage: mongoose.Types.ObjectId[]; // Soru Paketi referansı
-    videoUrl: string;
+    questionPackage: mongoose.Types.ObjectId[];
     interviewLink: string;
     publish: boolean;
     expireDate: Date; // Mülakatın bitiş tarihi

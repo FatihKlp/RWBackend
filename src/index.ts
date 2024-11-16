@@ -22,12 +22,22 @@ if (!MONGO_URL) {
 }
 
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
+if (!CORS_ORIGIN) {
+    throw new Error("CORS_ORIGIN must be defined");
+}
+const PYTHON_ORIGIN = process.env.PYTHON_ORIGIN;
+if (!PYTHON_ORIGIN) {
+    throw new Error("PYTHON_ORIGIN must be defined");
+}
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
+app.use(cors({
+    origin: [CORS_ORIGIN, PYTHON_ORIGIN],
+    credentials: true
+}));
 app.use(cookieParser());
 
 // Loglama (İşlem yapıldığında)

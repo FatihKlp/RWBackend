@@ -24,7 +24,6 @@ export const getVideoById = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-// Backend: video.controller.js veya benzer bir dosya
 export const uploadVideo = async (req: Request, res: Response) => {
     try {
         if (!req.file) {
@@ -36,6 +35,7 @@ export const uploadVideo = async (req: Request, res: Response) => {
         console.log("Received file varsa(Backend):", req.file); // Log the received file
 
         const responseData = await VideoService.uploadVideoToAPI(req.file);
+        console.log("Video uploaded to API dan gelen data(backend):", responseData);
 
         return res.status(200).json(responseData);
 

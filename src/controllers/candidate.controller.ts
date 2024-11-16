@@ -28,7 +28,7 @@ export const getCandidateById = async (req: Request, res: Response) => {
 
 // Kullanıcı video kaydını tamamlama
 export const submitInterview = async (req: Request, res: Response) => {
-    const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl } = req.body;
+    const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl, filePath } = req.body;
 
     try {
         // Yeni bir candidate oluştur ve kaydet
@@ -39,6 +39,7 @@ export const submitInterview = async (req: Request, res: Response) => {
             phone,
             kvkk,
             videoUrl,
+            filePath
         });
         await candidate.save();
 
@@ -48,7 +49,6 @@ export const submitInterview = async (req: Request, res: Response) => {
             { $push: { candidate: candidate._id } }, // Yeni candidate'i candidates dizisine ekle
             { new: true }
         );
-
         res.status(201).json({ message: "Candidate başarıyla kaydedildi." });
     } catch (error) {
         const message = error instanceof Error ? error.message : "Candidate kaydedilemedi.";
@@ -128,5 +128,33 @@ export const updateCandidateStatus = async (req: Request, res: Response) => {
         res.status(200).json(candidate);
     } catch (error) {
         res.status(500).json({ message: 'Error updating candidate status', error });
+    }
+};
+
+// Result güncelleme fonksiyonu
+export const updateCandidateResult = async (req: Request, res: Response) => {
+    const { transcription, face_analysis } = req.body;
+    const candidateId = req.params.id;
+
+    try {
+        const candidate = await Candidate.findByIdAndUpdate(
+            candidateId,
+            {
+                $set: {
+                    result: {
+                        transcription,
+                        face_analysis,
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        if (!candidate) {
+            return res.status(404).json({ message: 'Candidate not found' });
+        }
+        res.status(200).json(candidate);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating candidate result', error });
     }
 };
