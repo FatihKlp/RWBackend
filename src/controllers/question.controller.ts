@@ -19,16 +19,18 @@ export const getQuestionById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-export const createQuestion = async (req: Request, res: Response) => {
+export const createQuestion = async (req: Request, res: Response)=> {
   try {
     const { text, questionTime } = req.body;
     const question = await Question.create({ text, questionTime });
+    
     res.status(201).json(question);
   } catch (error: any) {
     // Mongoose validasyon hatalarını yakalayıp frontend'e gönderiyoruz
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map((err: any) => err.message);
-      return res.status(400).json({ message: errors });
+      res.status(400).json({ message: errors });
+      return;
     }
     res.status(500).json({ message: "Internal server error" });
   }
@@ -46,14 +48,16 @@ export const updateQuestion = async (req: Request, res: Response) => {
     );
 
     if (!question) {
-      return res.status(404).json({ message: "Question not found" });
+      res.status(404).json({ message: "Question not found" });
+      return;
     }
 
     res.status(200).json(question);
   } catch (error: any) {
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map((err: any) => err.message);
-      return res.status(400).json({ message: errors });
+      res.status(400).json({ message: errors });
+      return;
     }
     res.status(500).json({ message: "Internal server error" });
   }

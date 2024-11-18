@@ -24,12 +24,13 @@ export const getVideoById = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-export const uploadVideo = async (req: Request, res: Response) => {
+export const uploadVideo = async (req: Request, res: Response): Promise<void> => {
     try {
         if (!req.file) {
             console.log("Received file yoksa(Backend):", req.file);
             console.error("No video file uploaded.");
-            return res.status(400).json({ message: "No video file uploaded." });
+            res.status(400).json({ message: "No video file uploaded." });
+            return;
         }
 
         console.log("Received file varsa(Backend):", req.file); // Log the received file
@@ -37,7 +38,8 @@ export const uploadVideo = async (req: Request, res: Response) => {
         const responseData = await VideoService.uploadVideoToAPI(req.file);
         console.log("Video uploaded to API dan gelen data(backend):", responseData);
 
-        return res.status(200).json(responseData);
+        res.status(200).json(responseData);
+        return;
 
     } catch (error) {
         console.error("Error during video upload:", error); // Improved logging

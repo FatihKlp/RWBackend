@@ -14,11 +14,12 @@ export const getAllCandidates = async (req: Request, res: Response) => {
 };
 
 // ID'ye göre bir adayı getirir
-export const getCandidateById = async (req: Request, res: Response) => {
+export const getCandidateById = async (req: Request, res: Response): Promise<void> => {
     try {
         const candidate = await Candidate.findById(req.params.id);
         if (!candidate) {
-            return res.status(404).json({ message: 'Candidate not found' });
+            res.status(404).json({ message: 'Candidate not found' });
+            return;
         }
         res.status(200).json(candidate);
     } catch (error) {
@@ -57,11 +58,12 @@ export const submitInterview = async (req: Request, res: Response) => {
 };
 
 // Mevcut bir adayı günceller
-export const updateCandidate = async (req: Request, res: Response) => {
+export const updateCandidate = async (req: Request, res: Response): Promise<void> => {
     try {
         const candidate = await Candidate.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!candidate) {
-            return res.status(404).json({ message: 'Candidate not found' });
+            res.status(404).json({ message: 'Candidate not found' });
+            return;
         }
         res.status(200).json(candidate);
     } catch (error) {
@@ -70,12 +72,13 @@ export const updateCandidate = async (req: Request, res: Response) => {
 };
 
 // Adayı siler ve ilgili videoyu da siler
-export const deleteCandidate = async (req: Request, res: Response) => {
+export const deleteCandidate = async (req: Request, res: Response): Promise<void> => {
     try {
         console.log("Deleting candidate with ID:", req.params.id);
         const candidate = await Candidate.findById(req.params.id);
         if (!candidate) {
-            return res.status(404).json({ message: 'Candidate not found' });
+            res.status(404).json({ message: 'Candidate not found' });
+            return;
         }
 
         console.log("Candidate found, proceeding to delete:", candidate);
@@ -92,12 +95,13 @@ export const deleteCandidate = async (req: Request, res: Response) => {
 };
 
 // Belirli bir mülakat ID'ye göre adayları getirir
-export const getCandidatesForInterview = async (req: Request, res: Response) => {
+export const getCandidatesForInterview = async (req: Request, res: Response): Promise<void> => {
     const { interviewId } = req.params;
     try {
         const interview = await Interview.findById(interviewId).populate('candidate');
         if (!interview) {
-            return res.status(404).json({ message: 'Interview not found' });
+            res.status(404).json({ message: 'Interview not found' });
+            return;
         }
         res.status(200).json(interview.candidate);
     } catch (error) {
@@ -108,12 +112,13 @@ export const getCandidatesForInterview = async (req: Request, res: Response) => 
     }
 };
 
-export const updateCandidateStatus = async (req: Request, res: Response) => {
+export const updateCandidateStatus = async (req: Request, res: Response): Promise<void> => {
     const { status } = req.body;
 
     // Check if the status is one of the allowed values
     if (!['pending', 'passed', 'failed'].includes(status)) {
-        return res.status(400).json({ message: "Invalid status value" });
+        res.status(400).json({ message: "Invalid status value" });
+        return;
     }
 
     try {
@@ -123,7 +128,8 @@ export const updateCandidateStatus = async (req: Request, res: Response) => {
             { new: true }
         );
         if (!candidate) {
-            return res.status(404).json({ message: 'Candidate not found' });
+            res.status(404).json({ message: 'Candidate not found' });
+            return;
         }
         res.status(200).json(candidate);
     } catch (error) {
@@ -132,7 +138,7 @@ export const updateCandidateStatus = async (req: Request, res: Response) => {
 };
 
 // Result güncelleme fonksiyonu
-export const updateCandidateResult = async (req: Request, res: Response) => {
+export const updateCandidateResult = async (req: Request, res: Response): Promise<void> => {
     const { transcription, face_analysis } = req.body;
     const candidateId = req.params.id;
 
@@ -151,7 +157,8 @@ export const updateCandidateResult = async (req: Request, res: Response) => {
         );
 
         if (!candidate) {
-            return res.status(404).json({ message: 'Candidate not found' });
+            res.status(404).json({ message: 'Candidate not found' });
+            return;
         }
         res.status(200).json(candidate);
     } catch (error) {

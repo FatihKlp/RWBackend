@@ -10,9 +10,11 @@ export const addQuestionPackage = async (req: Request, res: Response) => {
         // Yeni soru paketi oluştur
         const newPackage = new QuestionPackage({ name, questions });
         await newPackage.save();
-        return res.status(201).json(newPackage);
+        res.status(201).json(newPackage);
+        return;
     } catch (error) {
-        return res.status(400).json({ message: 'Error creating question package', error });
+        res.status(400).json({ message: 'Error creating question package', error });
+        return;
     }
 };
 
@@ -21,17 +23,21 @@ export const deleteQuestionPackage = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid package ID' });
+        res.status(400).json({ message: 'Invalid package ID' });
+        return;
     }
 
     try {
         const deletedPackage = await QuestionPackage.findByIdAndDelete(id);
         if (!deletedPackage) {
-            return res.status(404).json({ message: 'Question package not found' });
+            res.status(404).json({ message: 'Question package not found' });
+            return;
         }
-        return res.status(200).json({ message: 'Question package deleted successfully' });
+        res.status(200).json({ message: 'Question package deleted successfully' });
+        return;
     } catch (error) {
-        return res.status(500).json({ message: 'Error deleting question package', error });
+        res.status(500).json({ message: 'Error deleting question package', error });
+        return;
     }
 };
 
@@ -41,17 +47,21 @@ export const updateQuestionPackage = async (req: Request, res: Response) => {
     const { name, questions } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid package ID' });
+        res.status(400).json({ message: 'Invalid package ID' });
+        return;
     }
 
     try {
         const updatedPackage = await QuestionPackage.findByIdAndUpdate(id, { name, questions }, { new: true });
         if (!updatedPackage) {
-            return res.status(404).json({ message: 'Question package not found' });
+            res.status(404).json({ message: 'Question package not found' });
+            return;
         }
-        return res.status(200).json(updatedPackage);
+        res.status(200).json(updatedPackage);
+        return;
     } catch (error) {
-        return res.status(500).json({ message: 'Error updating question package', error });
+        res.status(500).json({ message: 'Error updating question package', error });
+        return;
     }
 };
 
@@ -60,17 +70,21 @@ export const getQuestionPackageById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid package ID' });
+        res.status(400).json({ message: 'Invalid package ID' });
+        return;
     }
 
     try {
         const questionPackage = await QuestionPackage.findById(id).populate('questions');
         if (!questionPackage) {
-            return res.status(404).json({ message: 'Question package not found' });
+            res.status(404).json({ message: 'Question package not found' });
+            return;
         }
-        return res.status(200).json(questionPackage);
+        res.status(200).json(questionPackage);
+        return;
     } catch (error) {
-        return res.status(500).json({ message: 'Error fetching question package', error });
+        res.status(500).json({ message: 'Error fetching question package', error });
+        return;
     }
 };
 
@@ -78,8 +92,10 @@ export const getQuestionPackageById = async (req: Request, res: Response) => {
 export const getQuestionPackages = async (req: Request, res: Response) => {
     try {
         const packages = await QuestionPackage.find().populate('questions');
-        return res.status(200).json(packages);
+        res.status(200).json(packages);
+        return;
     } catch (error) {
-        return res.status(500).json({ message: 'Error fetching question packages', error });
+        res.status(500).json({ message: 'Error fetching question packages', error });
+        return;
     }
 };

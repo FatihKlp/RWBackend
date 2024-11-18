@@ -2,24 +2,27 @@ import { json, Request, Response } from "express";
 import Interview from "../models/interviews.model";
 
 // Admin yeni bir mülakat oluşturur
-export const createInterview = async (req: Request, res: Response) => {
+export const createInterview = async (req: Request, res: Response): Promise<void> => {
   const { title, questionPackage, expireDate } = req.body;
 
   try {
     const newInterview = new Interview({ title, questionPackage, expireDate });
     await newInterview.save();
 
-    return res.status(201).json({ interview: newInterview }); // Sadece interview döndürülüyor
+    res.status(201).json({ interview: newInterview }); // Sadece interview döndürülüyor
+    return;
   } catch (error) {
-    return res.status(400).json({ message: "Interview oluşturulamadı", error });
+    res.status(400).json({ message: "Interview oluşturulamadı", error });
+    return;
   }
 };
 
 // Tüm mülakatları listeleme
-export const getInterviews = async (req: Request, res: Response) => {
+export const getInterviews = async (req: Request, res: Response): Promise<void> => {
   try {
     const interviews = await Interview.find().populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
-    return res.status(200).json(interviews); // Mülakatlar listelendi
+    res.status(200).json(interviews); // Mülakatlar listelendi
+    return;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Mülakatlar listelenemedi";
     res.status(400).json({ message, error });
@@ -27,7 +30,7 @@ export const getInterviews = async (req: Request, res: Response) => {
 };
 
 // Tek bir mülakatı ID'ye göre alma
-export const getInterviewById = async (req: Request, res: Response) => {
+export const getInterviewById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
@@ -35,9 +38,11 @@ export const getInterviewById = async (req: Request, res: Response) => {
       "candidate questionPackage"
     ); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!interview) {
-      return res.status(404).json({ message: "Mülakat bulunamadı" });
+      res.status(404).json({ message: "Mülakat bulunamadı" });
+      return;
     }
-    return res.status(200).json(interview); // Mülakat bulundu
+    res.status(200).json(interview); // Mülakat bulundu
+    return;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Mülakat bulunamadı";
     res.status(400).json({ message, error });
@@ -45,7 +50,7 @@ export const getInterviewById = async (req: Request, res: Response) => {
 };
 
 // Mülakat güncelleme
-export const updateInterview = async (req: Request, res: Response) => {
+export const updateInterview = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const updateData = req.body;
 
@@ -54,9 +59,11 @@ export const updateInterview = async (req: Request, res: Response) => {
       new: true,
     }).populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!updatedInterview) {
-      return res.status(404).json({ message: "Mülakat bulunamadı" });
+      res.status(404).json({ message: "Mülakat bulunamadı" });
+      return;
     }
-    return res.status(200).json(updatedInterview); // Mülakat güncellendi
+    res.status(200).json(updatedInterview); // Mülakat güncellendi
+    return;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Mülakat güncellenemedi";
     res.status(400).json({ message, error });
@@ -64,15 +71,17 @@ export const updateInterview = async (req: Request, res: Response) => {
 };
 
 // Mülakat silme
-export const deleteInterview = async (req: Request, res: Response) => {
+export const deleteInterview = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   try {
     const deletedInterview = await Interview.findByIdAndDelete(id);
     if (!deletedInterview) {
-      return res.status(404).json({ message: "Mülakat bulunamadı" });
+      res.status(404).json({ message: "Mülakat bulunamadı" });
+      return;
     }
-    return res.status(200).json({ message: "Mülakat başarıyla silindi" }); // Mülakat silindi
+    res.status(200).json({ message: "Mülakat başarıyla silindi" }); // Mülakat silindi
+    return;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Mülakat silinemedi";
     res.status(400).json({ message, error });
@@ -80,7 +89,7 @@ export const deleteInterview = async (req: Request, res: Response) => {
 };
 
 // Mülakatı yayınlama durumunu güncelleme (publish/unpublish)
-export const updatePublishStatus = async (req: Request, res: Response) => {
+export const updatePublishStatus = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { publish } = req.body;
 
@@ -91,9 +100,11 @@ export const updatePublishStatus = async (req: Request, res: Response) => {
       { new: true }
     ).populate("candidate questionPackage"); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!updatedInterview) {
-      return res.status(404).json({ message: "Mülakat bulunamadı" });
+      res.status(404).json({ message: "Mülakat bulunamadı" });
+      return;
     }
-    return res.status(200).json(updatedInterview);
+    res.status(200).json(updatedInterview);
+    return;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Mülakat güncellenemedi";
     res.status(400).json({ message, error });
