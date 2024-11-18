@@ -30,12 +30,17 @@ if (!PYTHON_ORIGIN) {
     throw new Error("PYTHON_ORIGIN must be defined");
 }
 
+const LINK_ORIGIN = process.env.COMPANY_URL;
+if (!LINK_ORIGIN) {
+    throw new Error("LINK_ORIGIN must be defined");
+}
+
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: [CORS_ORIGIN, PYTHON_ORIGIN],
+    origin: [CORS_ORIGIN, PYTHON_ORIGIN, LINK_ORIGIN],
     credentials: true
 }));
 app.use(cookieParser());
