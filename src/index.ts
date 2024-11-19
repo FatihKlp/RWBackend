@@ -11,6 +11,7 @@ import InterviewRoutes from './routes/interviews.routes';
 import LinkRoutes from './routes/link.routes';
 import VideoRoutes from './routes/video.routes';
 import CandidateRoutes from './routes/candidate.routes';
+import UsersRoutes from './routes/users.routes';
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -53,14 +54,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Login Route (Public, no authentication required)
 app.use('/api/login', AuthRoutes);
-app.use('/api/videos', VideoRoutes);
+app.use('/api/users', UsersRoutes);
 
-app.use('/api/candidates', CandidateRoutes);
 // Protected Routes
+app.use('/api/videos', VideoRoutes);
+app.use('/api/candidates', CandidateRoutes);
 app.use('/api/questions', QuestionsRoutes);
 app.use('/api/questionPackages', QuestionPackageRoutes);
 app.use('/api/interviews', InterviewRoutes);
-
 app.use('/api/links', LinkRoutes);
 
 // Error Handling (Hata olduğu zamanlarda)

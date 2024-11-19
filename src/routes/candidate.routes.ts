@@ -2,7 +2,6 @@ import express from 'express';
 import {
     getAllCandidates,
     getCandidateById,
-    submitInterview,
     updateCandidate,
     deleteCandidate,
     getCandidatesForInterview,
@@ -17,9 +16,6 @@ router.get('/', getAllCandidates);
 
 // ID'ye göre bir adayı getirir
 router.get('/:id', getCandidateById);
-
-// POST: Interview tamamlama kullanıcı oluşturma
-router.post("/submit", submitInterview);
 
 // Mevcut bir adayı günceller , ilerde güncelleme ihtiyacı duyulursa
 router.put('/:id', updateCandidate);

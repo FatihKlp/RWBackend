@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Candidate from '../models/candidate.model';
 import Interview from '../models/interviews.model';
-import { deleteVideo } from '../services/video.service';
 
 // Tüm adayları getirir
 export const getAllCandidates = async (req: Request, res: Response) => {
