@@ -14,7 +14,6 @@ export interface ICandidate extends Document {
         face_analysis: {
             age: number;
             gender: string;
-            race: string;
             emotion: string;
         };
     };
@@ -46,7 +45,6 @@ const CandidateSchema: Schema = new Schema(
             face_analysis: {
                 age: { type: Number },
                 gender: { type: String },
-                race: { type: String },
                 emotion: { type: String },
             },
         },

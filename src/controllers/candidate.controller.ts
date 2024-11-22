@@ -141,13 +141,22 @@ export const updateCandidateResult = async (req: Request, res: Response): Promis
     const candidateId = req.params.id;
 
     try {
+        // Gelen veriyi şema ile uyumlu hale getirme
+        const transformedFaceAnalysis = face_analysis
+            ? {
+                age: face_analysis.average_age || null,
+                gender: face_analysis.dominant_gender || null,
+                emotion: face_analysis.dominant_emotion || null,
+            }
+            : null;
+
         const candidate = await Candidate.findByIdAndUpdate(
             candidateId,
             {
                 $set: {
                     result: {
                         transcription,
-                        face_analysis,
+                        face_analysis: transformedFaceAnalysis,
                     },
                 },
             },
