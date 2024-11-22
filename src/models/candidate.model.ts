@@ -9,7 +9,6 @@ export interface ICandidate extends Document {
     status: 'pending' | 'passed' | 'failed';
     kvkk: boolean;
     videoUrl: string;
-    filePath: string;
     result?: {
         transcription: string;
         face_analysis: {
@@ -42,7 +41,6 @@ const CandidateSchema: Schema = new Schema(
         },
         kvkk: { type: Boolean, default: false },
         videoUrl: { type: String },
-        filePath: { type: String },
         result: {
             transcription: { type: String },
             face_analysis: {

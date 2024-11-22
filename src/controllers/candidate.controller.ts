@@ -28,7 +28,7 @@ export const getCandidateById = async (req: Request, res: Response): Promise<voi
 
 // Kullanıcı video kaydını tamamlama
 export const submitInterview = async (req: Request, res: Response) => {
-    const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl, filePath } = req.body;
+    const { interviewId, firstName, lastName, email, phone, kvkk, videoUrl } = req.body;
 
     try {
         // Yeni bir candidate oluştur ve kaydet
@@ -38,8 +38,7 @@ export const submitInterview = async (req: Request, res: Response) => {
             email,
             phone,
             kvkk,
-            videoUrl,
-            filePath
+            videoUrl
         });
         await candidate.save();
 
