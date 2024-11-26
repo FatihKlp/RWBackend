@@ -34,9 +34,12 @@ export const getInterviewById = async (req: Request, res: Response): Promise<voi
   const { id } = req.params;
 
   try {
-    const interview = await Interview.findById(id).populate(
-      "candidate questionPackage"
-    ); // Kullanıcı ve soru paketleriyle birlikte getir
+    const interview = await Interview.findById(id).populate({
+      path: "questionPackage",
+      populate: {
+        path: "questions",
+      },
+    }); // Kullanıcı ve soru paketleriyle birlikte getir
     if (!interview) {
       res.status(404).json({ message: "Mülakat bulunamadı" });
       return;

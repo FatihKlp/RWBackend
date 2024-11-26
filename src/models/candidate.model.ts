@@ -11,10 +11,28 @@ export interface ICandidate extends Document {
     videoUrl: string;
     result?: {
         transcription: string;
+        analysis: {
+            word_count: number;
+            unique_words: number;
+            keyword_hits: {
+                technical: string[];
+                soft_skills: string[];
+            };
+            question_similarity: {
+                question: string;
+                similarity: number;
+            }[];
+            total_score: number;
+        };
         face_analysis: {
             age: number;
             gender: string;
             emotion: string;
+        };
+        emotion_analysis: {
+            positive: number;
+            neutral: number;
+            negative: number;
         };
     };
 }
@@ -42,12 +60,30 @@ const CandidateSchema: Schema = new Schema(
         videoUrl: { type: String },
         result: {
             transcription: { type: String },
+            analysis: {
+                word_count: { type: Number },
+                unique_words: { type: Number },
+                keyword_hits: {
+                    technical: [{ type: String }],
+                    soft_skills: [{ type: String }]
+                },
+                question_similarity: [{
+                    question: { type: String },
+                    similarity: { type: Number }
+                }],
+                total_score: { type: Number }
+            },
             face_analysis: {
                 age: { type: Number },
                 gender: { type: String },
-                emotion: { type: String },
+                emotion: { type: String }
             },
-        },
+            emotion_analysis: {
+                positive: { type: Number, default: 0 },
+                neutral: { type: Number, default: 0 },
+                negative: { type: Number, default: 0 },
+            }
+        }
     },
     { timestamps: true }
 );

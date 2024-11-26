@@ -137,26 +137,17 @@ export const updateCandidateStatus = async (req: Request, res: Response): Promis
 
 // Result güncelleme fonksiyonu
 export const updateCandidateResult = async (req: Request, res: Response): Promise<void> => {
-    const { transcription, face_analysis } = req.body;
+    const { transcription, analysis } = req.body;
     const candidateId = req.params.id;
 
     try {
-        // Gelen veriyi şema ile uyumlu hale getirme
-        const transformedFaceAnalysis = face_analysis
-            ? {
-                age: face_analysis.average_age || null,
-                gender: face_analysis.dominant_gender || null,
-                emotion: face_analysis.dominant_emotion || null,
-            }
-            : null;
-
         const candidate = await Candidate.findByIdAndUpdate(
             candidateId,
             {
                 $set: {
                     result: {
                         transcription,
-                        face_analysis: transformedFaceAnalysis,
+                        analysis,
                     },
                 },
             },

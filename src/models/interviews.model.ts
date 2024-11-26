@@ -7,20 +7,40 @@ export interface IInterview extends Document {
     questionPackage: mongoose.Types.ObjectId[];
     interviewLink: string;
     publish: boolean;
-    expireDate: Date; // Mülakatın bitiş tarihi
+    expireDate: Date;
+    requirements: {
+        keywords: {
+            technical: string[];   // Teknik anahtar kelimeler
+            softSkills: string[];  // Soft skills anahtar kelimeler
+        };
+        languageMetrics: {
+            minWordCount: number;    // Minimum kelime sayısı
+            targetDiversity: number; // Hedef kelime çeşitliliği
+        };
+    };
 }
 
 const interviewSchema: Schema = new Schema({
-    title: { type: String, required: true, trim: true },  // Mülakat başlığı
+    title: { type: String, required: true, trim: true },
     candidate: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Candidate', required: false }],
     questionPackage: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionPackage', required: true }],
     interviewLink: {
         type: String,
-        default: uuidv4,  // Her mülakata rastgele bir link atıyoruz
-        unique: true
+        default: uuidv4,
+        unique: true,
     },
-    publish: { type: Boolean, default: false },  // Mülakat yayınlandımi
-    expireDate: { type: Date, required: true }  // Mülakat bitiş tarihi
+    publish: { type: Boolean, default: false },
+    expireDate: { type: Date, required: true },
+    requirements: {
+        keywords: {
+            technical: { type: [String], default: [] },
+            softSkills: { type: [String], default: [] },
+        },
+        languageMetrics: {
+            minWordCount: { type: Number, default: 0 },
+            targetDiversity: { type: Number, default: 0 },
+        },
+    },
 }, { timestamps: true });
 
 const Interview = mongoose.model<IInterview>('Interview', interviewSchema);
